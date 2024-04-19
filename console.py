@@ -157,9 +157,8 @@ class HBNBCommand(cmd.Cmd):
             setattr(new_instance, key, value)
 
         # Save the instance and print its ID
-        storage.save()
+        new_instance.save()
         print(new_instance.id)
-        storage.save()
 
     def help_create(self):
         """ Help information for the create method """
@@ -241,12 +240,12 @@ class HBNBCommand(cmd.Cmd):
             if args not in HBNBCommand.classes:
                 print("** class doesn't exist **")
                 return
-            for k, v in storage._FileStorage__objects.items():
-                if k.split('.')[0] == args:
-                    print_list.append(str(v))
+            cls = HBNBCommand.classes[args] # get the class from 'classes'
+            for obj in storage.all(cls).values():
+                print_list.append(str(obj))
         else:
-            for k, v in storage._FileStorage__objects.items():
-                print_list.append(str(v))
+            for obj in storage.all().values():
+                print_list.append(str(obj))
 
         print("[{}]".format(", ".join(print_list)))
 
@@ -258,13 +257,13 @@ class HBNBCommand(cmd.Cmd):
     def do_count(self, args):
         """Count current number of class instances"""
         count = 0
-        for k, v in storage._FileStorage__objects.items():
+        for k, v in storage.all(args).values():
             if args == k.split('.')[0]:
                 count += 1
         print(count)
 
     def help_count(self):
-        """ """
+        """ Help information for the count command """
         print("Usage: count <class_name>")
 
     def do_update(self, args):
@@ -346,7 +345,7 @@ class HBNBCommand(cmd.Cmd):
                     att_val = HBNBCommand.types[att_name](att_val)
 
                 # update dictionary with name, value pair
-                new_dict.__dict__.update({att_name: att_val})
+                setattr(new_dict, attr_name, attr_val)
 
         new_dict.save()  # save updates to file
 

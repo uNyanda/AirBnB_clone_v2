@@ -50,6 +50,7 @@ class DBStorage:
         """ Create all tables in database & current session """
         from models.state import State
         from models.city import City
+        from models.user import User
 
         Base.metadata.create_all(self.__engine)
         session_factory = sessionmaker(bind=self.__engine,
