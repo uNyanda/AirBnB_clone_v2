@@ -2,6 +2,12 @@
 """This module instantiates an object of class FileStorage or DBStorage"""
 from os import getenv
 
+# importing the required classes
+from models.state import State
+from models.city import City
+from models.user import User
+from models.place import Place
+from models.amenity import Amenity
 
 if getenv('HBNB_TYPE_STORAGE') == 'db':
     from models.engine.db_storage import DBStorage
